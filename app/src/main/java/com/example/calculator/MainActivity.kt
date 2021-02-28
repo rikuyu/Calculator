@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val btn00: Button = findViewById(R.id.btn00)
+        val btnE: Button = findViewById(R.id.btnE)
         val btn0: Button = findViewById(R.id.btn0)
         val btn1: Button = findViewById(R.id.btn1)
         val btn2: Button = findViewById(R.id.btn2)
@@ -32,8 +32,12 @@ class MainActivity : AppCompatActivity() {
         val btnClear: Button = findViewById(R.id.btnClear)
         val btnEqual: Button = findViewById(R.id.btnEqual)
         val btnDot: Button = findViewById(R.id.btnDot)
+        val btnPie: Button = findViewById(R.id.btnPie)
+        val btnSin: Button = findViewById(R.id.btnSin)
+        val btnCos: Button = findViewById(R.id.btnCos)
+        val btnLog: Button = findViewById(R.id.btnLog)
 
-        btn00.setOnClickListener { appendText(true, "00") }
+        btnE.setOnClickListener { appendText(true, "e") }
         btn0.setOnClickListener { appendText(true, "0") }
         btn1.setOnClickListener { appendText(true, "1") }
         btn2.setOnClickListener { appendText(true, "2") }
@@ -45,11 +49,15 @@ class MainActivity : AppCompatActivity() {
         btn8.setOnClickListener { appendText(true, "8") }
         btn9.setOnClickListener { appendText(true, "9") }
         btnDot.setOnClickListener { appendText(true, ".") }
+        btnPie.setOnClickListener { appendText(true, "π") }
+        btnSin.setOnClickListener { appendText(true, "sin(") }
+        btnCos.setOnClickListener { appendText(true, "cos(") }
+        btnLog.setOnClickListener { appendText(true, "log(") }
 
         btnPlus.setOnClickListener { appendText(false, "+") }
         btnMinus.setOnClickListener { appendText(false, "-") }
-        btnMultiply.setOnClickListener { appendText(false, "*") }
-        btnDivide.setOnClickListener { appendText(false, "/") }
+        btnMultiply.setOnClickListener { appendText(false, "×") }
+        btnDivide.setOnClickListener { appendText(false, "÷") }
         btnLeftB.setOnClickListener { appendText(false, "(") }
         btnRightB.setOnClickListener { appendText(false, ")") }
         btnClear.setOnClickListener { handleClear() }
@@ -83,19 +91,21 @@ class MainActivity : AppCompatActivity() {
         val tvOutput: TextView = findViewById(R.id.tvOutput)
 
         try {
-            val input = ExpressionBuilder(tvInput.text.toString()).build()
+            val input = ExpressionBuilder(
+                tvInput.text.toString().replace("÷", "/").replace("×", "*")
+            ).build()
             val output = input.evaluate()
             val longOutput = output.toLong()
             if (output == longOutput.toDouble()) {
                 tvOutput.text = longOutput.toString()
                 tvInput.text = ""
             } else {
-                tvOutput.text = output.toString()
+                tvOutput.text = output.toString().take(12)
                 tvInput.text = ""
             }
 
         } catch (e: Exception) {
-            Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+            Toast.makeText(this@MainActivity, "計算式が正しくありません", Toast.LENGTH_LONG).show()
         }
     }
 }
